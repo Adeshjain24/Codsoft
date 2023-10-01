@@ -1,0 +1,99 @@
+#include <iostream>
+#include <vector>
+#include <string>
+using namespace std;
+
+
+struct Task {
+    string description;
+    bool finished;
+};
+
+class ToDoList {
+private:
+    vector<Task> tasks;
+
+public:
+    void addTask(const string& description) {
+        Task newTask = {description, false};
+        tasks.push_back(newTask);
+    }
+
+    void viewTasks() const {
+        for (size_t i = 0; i < tasks.size(); ++i) {
+            cout << i + 1 << ". (" << (tasks[i].finished ? "Completed" : "Pending") << ") " << tasks[i].description << endl;
+        }
+    }
+
+    void markAsCompleted(size_t tasknumber) {
+        if (tasknumber > 0 && tasknumber <= tasks.size()) {
+            tasks[tasknumber - 1].finished = true;
+        } else {
+            cout << "Invalid task number!" << endl;
+        }
+    }
+
+    void DeleteTask(size_t tasknumber) {
+        if (tasknumber > 0 && tasknumber <= tasks.size()) {
+            tasks.erase(tasks.begin() + tasknumber - 1);
+        } else {
+            cout << "Invalid task number!" << endl;
+        }
+    }
+};
+
+int main() {
+    ToDoList manager;
+
+    while (true) {
+        cout << "\nMenu: Select the operation you want to perform" << endl;
+        cout << "1. Add Task" << endl;
+        cout << "2. View Tasks" << endl;
+        cout << "3. Mark Task as Completed" << endl;
+        cout << "4. Delete Task" << endl;
+        cout << "5. Exit" << endl;
+
+        int number;
+        cout << "Enter your choice: ";
+        cin >> number;
+
+        switch (number) {
+            case 1: {
+                string description;
+                cout << "Enter the task: ";
+                cin.ignore(); // Clear newline from previous input
+                getline(cin, description);
+                manager.addTask(description);
+                cout << "Task added successfully!!" << endl;
+                break;
+            }
+            case 2:
+                cout << "\nTasks:" << endl;
+                manager.viewTasks();
+                break;
+            case 3: {
+                size_t tasknumber;
+                cout << "Enter the task number to be marked as finished: ";
+                cin >> tasknumber;
+                manager.markAsCompleted(tasknumber);
+                cout << "Task marked as finished!!" << endl;
+                break;
+            }
+            case 4: {
+                size_t tasknumber;
+                cout << "Enter the task number to be Deleted: ";
+                cin >> tasknumber;
+                manager.DeleteTask(tasknumber);
+                cout << "Task Deleted successfully!" << endl;
+                break;
+            }
+            case 5:
+                cout << "Exiting..." << endl;
+                return 0;
+            default:
+                cout << "Invalid operation. Enter the correct number" << endl;
+        }
+    }
+
+    return 0;
+}
