@@ -1,0 +1,116 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+
+class TicTacToe {
+public:
+    TicTacToe() {
+        StartBoard();
+        ActualPlayer = 'X';
+        gameOver = false;
+    }
+
+    void StartGame() {
+        do {
+            DisplayBoard();
+            GetPlayerMove();
+            if (CheckForWin()) {
+                DisplayBoard();
+              cout << "Player " << ActualPlayer << " wins!" << endl;
+                break;
+            } else if (CheckForDraw()) {
+                DisplayBoard();
+               cout << "It is a draw!" << endl;
+                break;
+            }
+            ChangePlayer();
+        } while (!gameOver);
+
+        cout << "Do you want to play the TicTacToe Game again? (yes/no): ";
+        char playAgain;
+        cin >> playAgain;
+        if (playAgain == 'yes' || playAgain == 'YES') {
+            ResetGame();
+            StartGame();
+        }
+    }
+
+private:
+    vector<vector<char>> board;
+    char ActualPlayer;
+    bool gameOver;
+
+    void StartBoard() {
+        board = vector<vector<char>>(3, vector<char>(3, ' '));
+    }
+
+    void DisplayBoard() {
+        cout << "  1 2 3" <<endl;
+        for (int i = 0; i < 3; i++) {
+           cout << i + 1 << " ";
+            for (int j = 0; j < 3; j++) {
+                cout << board[i][j];
+                if (j < 2)cout << "|";
+            }
+            cout <<endl;
+            if (i < 2) cout << "  ------" << endl;
+        }
+    }
+
+    void GetPlayerMove() {
+        int row, col;
+        cout << "Player " << ActualPlayer << ", enter your move (row and column): ";
+        cin >> row >> col;
+
+        // Check if the input is valid and the cell is empty
+        if (row >= 1 && row <= 3 && col >= 1 && col <= 3 && board[row - 1][col - 1] == ' ') {
+            board[row - 1][col - 1] = ActualPlayer;
+        } else {
+            cout << "Invalid move. Try again." <<endl;
+            GetPlayerMove();
+        }
+    }
+
+    bool CheckForWin() {
+        // Check rows, columns, and diagonals for a win
+        for (int i = 0; i < 3; i++) {
+            if (board[i][0] == ActualPlayer && board[i][1] == ActualPlayer && board[i][2] == ActualPlayer)
+                return true;
+            if (board[0][i] == ActualPlayer && board[1][i] == ActualPlayer && board[2][i] == ActualPlayer)
+                return true;
+        }
+        if (board[0][0] == ActualPlayer && board[1][1] == ActualPlayer && board[2][2] == ActualPlayer)
+            return true;
+        if (board[0][2] == ActualPlayer && board[1][1] == ActualPlayer && board[2][0] == ActualPlayer)
+            return true;
+
+        return false;
+    }
+
+    bool CheckForDraw() {
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                if (board[i][j] == ' ') {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    void ChangePlayer() {
+        ActualPlayer = (ActualPlayer == 'X') ? 'O' : 'X';
+    }
+
+    void ResetGame() {
+        StartBoard();
+        ActualPlayer = 'X';
+        gameOver = false;
+    }
+};
+
+int main() {
+    TicTacToe T;
+    T.StartGame();
+    return 0;
+}
